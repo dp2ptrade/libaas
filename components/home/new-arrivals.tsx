@@ -2,10 +2,9 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Heart } from 'lucide-react';
 import type { Product } from '@/lib/types';
-import { formatBDT, calculateDiscount } from '@/lib/format';
 import { ProductCard } from '@/components/shop/product-card';
+import { EditableText } from '@/components/admin/editable-text';
 
 export function NewArrivals({ products }: { products: Product[] }) {
   return (
@@ -20,7 +19,12 @@ export function NewArrivals({ products }: { products: Product[] }) {
         >
           <div>
             <p className="text-gold-600 text-xs uppercase tracking-[0.3em] mb-3">Just Arrived</p>
-            <h2 className="font-serif text-4xl md:text-5xl">New Arrivals</h2>
+            <h2 className="font-serif text-4xl md:text-5xl">
+              <EditableText contentKey="new_arrivals_title" fallback="New Arrivals" as="span" />
+            </h2>
+            <p className="text-muted-foreground text-sm mt-2">
+              <EditableText contentKey="new_arrivals_subtitle" fallback="Fresh silhouettes, just landed" as="span" />
+            </p>
           </div>
           <Link
             href="/shop"

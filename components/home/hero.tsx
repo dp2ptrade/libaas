@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { EditableText } from '@/components/admin/editable-text';
 
 export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -42,7 +43,7 @@ export function Hero() {
           transition={{ duration: 1, delay: 0.3 }}
           className="text-gold-400 text-sm md:text-base uppercase tracking-[0.3em] mb-6"
         >
-          Couture & Pret — Est. 2024
+          <EditableText contentKey="hero_eyebrow" fallback="Couture & Pret — Est. 2024" as="span" />
         </motion.p>
 
         <motion.h1
@@ -51,9 +52,7 @@ export function Hero() {
           transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="font-serif text-5xl md:text-7xl lg:text-8xl text-white text-shadow-luxury text-balance max-w-4xl"
         >
-          Where Heritage
-          <br />
-          Meets <span className="italic text-gold-400">Elegance</span>
+          <EditableText contentKey="hero_title" fallback="Where Heritage Meets Elegance" as="span" className="font-serif text-5xl md:text-7xl lg:text-8xl text-white text-shadow-luxury text-balance" />
         </motion.h1>
 
         <motion.p
@@ -62,8 +61,7 @@ export function Hero() {
           transition={{ duration: 1, delay: 0.8 }}
           className="text-white/80 text-lg md:text-xl mt-8 max-w-xl text-balance"
         >
-          Hand-crafted couture, luxury pret, and timeless menswear —
-          made in Bangladesh, designed for the world.
+          <EditableText contentKey="hero_subtitle" fallback="Hand-crafted couture, luxury pret, and timeless menswear — made in Bangladesh, designed for the world." as="span" />
         </motion.p>
 
         <motion.div
@@ -76,14 +74,14 @@ export function Hero() {
             href="/shop"
             className="group inline-flex items-center gap-2 px-8 py-4 bg-white text-ink-900 text-sm font-medium uppercase tracking-wider hover:bg-gold-500 hover:text-white transition-all duration-300"
           >
-            Explore Collection
+            <EditableText contentKey="hero_cta_primary" fallback="Explore Collection" as="span" />
             <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
           </Link>
           <Link
-            href="/shop/luxury-pret"
+            href="/about"
             className="inline-flex items-center gap-2 px-8 py-4 border border-white/30 text-white text-sm font-medium uppercase tracking-wider hover:border-gold-500 hover:text-gold-500 transition-all duration-300"
           >
-            Luxury Pret
+            <EditableText contentKey="hero_cta_secondary" fallback="Our Story" as="span" />
           </Link>
         </motion.div>
       </motion.div>

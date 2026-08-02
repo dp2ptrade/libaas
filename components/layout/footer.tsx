@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Instagram, Facebook, Mail, Phone, MapPin } from 'lucide-react';
+import { EditableText } from '@/components/admin/editable-text';
 
 export function Footer() {
   return (
@@ -14,8 +15,7 @@ export function Footer() {
               The Libaas <span className="text-gold-500 italic">Gallery</span>
             </h3>
             <p className="text-sm leading-relaxed text-white/50 max-w-xs">
-              Where heritage meets modern elegance. Crafted in Bangladesh with
-              artisanal detail and uncompromising quality.
+              <EditableText contentKey="footer_tagline" fallback="Where heritage meets modern elegance. Crafted in Bangladesh with artisanal detail and uncompromising quality." as="span" />
             </p>
             <div className="flex gap-4 mt-6">
               <a href="#" className="text-white/50 hover:text-gold-500 transition-colors" aria-label="Instagram">

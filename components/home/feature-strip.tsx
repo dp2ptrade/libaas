@@ -3,13 +3,14 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { EditableText } from '@/components/admin/editable-text';
 
 export function FeatureStrip() {
   const features = [
-    { icon: '✦', title: 'Free Shipping', desc: 'On orders over 5,000 ৳' },
-    { icon: '◈', title: 'Easy Returns', desc: '7-day return policy' },
-    { icon: '✧', title: 'Secure Payments', desc: 'Visa, bKash, Nagad, COD' },
-    { icon: '❋', title: 'Authentic Craft', desc: 'Hand-made in Bangladesh' },
+    { icon: '✦', titleKey: 'feature_1_title', titleFallback: 'Free Shipping', descKey: 'feature_1_desc', descFallback: 'On orders over 5,000 ৳' },
+    { icon: '◈', titleKey: 'feature_2_title', titleFallback: 'Easy Returns', descKey: 'feature_2_desc', descFallback: '7-day return policy' },
+    { icon: '✧', titleKey: 'feature_3_title', titleFallback: 'Secure Payments', descKey: 'feature_3_desc', descFallback: 'Visa, bKash, Nagad, COD' },
+    { icon: '❋', titleKey: 'feature_4_title', titleFallback: 'Authentic Craft', descKey: 'feature_4_desc', descFallback: 'Hand-made in Bangladesh' },
   ];
 
   return (
@@ -18,7 +19,7 @@ export function FeatureStrip() {
         <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-border">
           {features.map((f, i) => (
             <motion.div
-              key={f.title}
+              key={f.titleKey}
               initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -27,8 +28,12 @@ export function FeatureStrip() {
             >
               <span className="text-gold-500 text-2xl shrink-0">{f.icon}</span>
               <div>
-                <p className="font-medium text-sm">{f.title}</p>
-                <p className="text-xs text-muted-foreground">{f.desc}</p>
+                <p className="font-medium text-sm">
+                  <EditableText contentKey={f.titleKey} fallback={f.titleFallback} as="span" />
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  <EditableText contentKey={f.descKey} fallback={f.descFallback} as="span" />
+                </p>
               </div>
             </motion.div>
           ))}

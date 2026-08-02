@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, useRef, ReactNode } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { Profile } from '@/lib/types';
 
@@ -30,6 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<{ id: string; email: string } | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const userIdRef = useRef<string | null>(null);
 
   const fetchProfile = useCallback(async (userId: string) => {
     const { data } = await supabase
@@ -50,6 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } = await supabase.auth.getSession();
       if (!mounted) return;
       if (session?.user) {
+        userIdRef.current = session.user.id;
         setUser({ id: session.user.id, email: session.user.email || '' });
         await fetchProfile(session.user.id);
       }
@@ -68,6 +70,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!mounted) return;
 
       if (event === 'SIGNED_OUT' || !session) {
+        userIdRef.current = null;
         setUser(null);
         setProfile(null);
         setLoading(false);
@@ -75,15 +78,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+        userIdRef.current = session.user.id;
         setUser({ id: session.user.id, email: session.user.email || '' });
         fetchProfile(session.user.id);
         setLoading(false);
       }
     });
 
+    // Refresh profile when the page regains focus — picks up DB-side
+    // changes like role updates made from the database console.
+    const onFocus = () => {
+      if (mounted && userIdRef.current) fetchProfile(userIdRef.current);
+    };
+    window.addEventListener('focus', onFocus);
+
     return () => {
       mounted = false;
       subscription.unsubscribe();
+      window.removeEventListener('focus', onFocus);
     };
   }, [fetchProfile]);
 
@@ -93,12 +105,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signUp = async (email: string, password: string, fullName: string) => {
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: { data: { full_name: fullName } },
     });
-    return { error: error?.message || null };
+    if (error) return { error: error.message };
+
+    // The database trigger should create the profile, but if it fails
+    // (race condition, trigger error), we create it directly as a fallback.
+    if (data.user) {
+      await supabase.from('profiles').upsert(
+        { id: data.user.id, full_name: fullName },
+        { onConflict: 'id' }
+      );
+    }
+    return { error: null };
   };
 
   const signOut = async () => {

@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import { useScroll, useTransform } from 'framer-motion';
+import { EditableText } from '@/components/admin/editable-text';
 
 export function Manifesto() {
   const ref = useRef<HTMLDivElement>(null);
@@ -12,13 +13,6 @@ export function Manifesto() {
   });
 
   const y = useTransform(scrollYProgress, [0, 1], ['10%', '-10%']);
-
-  const words = [
-    'We', 'believe', 'in', 'the', 'quiet', 'power', 'of', 'craft.',
-    'In', 'hands', 'that', 'remember', 'generations', 'of', 'technique.',
-    'In', 'fabrics', 'that', 'breathe,', 'colors', 'that', 'endure,',
-    'and', 'designs', 'that', 'transcend', 'the', 'season.',
-  ];
 
   return (
     <section ref={ref} className="py-32 bg-ink-900 relative overflow-hidden">
@@ -42,20 +36,13 @@ export function Manifesto() {
         </motion.p>
 
         <div className="max-w-4xl mx-auto text-center">
-          <p className="font-serif text-2xl md:text-4xl lg:text-5xl text-white/90 leading-relaxed text-balance">
-            {words.map((word, i) => (
-              <motion.span
-                key={i}
-                initial={{ opacity: 0.15 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ margin: '-20% 0px -20% 0px' }}
-                transition={{ duration: 0.4, delay: i * 0.05 }}
-                className="inline-block mr-[0.25em]"
-              >
-                {word}
-              </motion.span>
-            ))}
-          </p>
+          <EditableText
+            contentKey="manifesto_title"
+            fallback="Where Heritage Meets the Contemporary"
+            as="h2"
+            multiline
+            className="font-serif text-2xl md:text-4xl lg:text-5xl text-white/90 leading-relaxed text-balance"
+          />
         </div>
 
         <motion.div
